@@ -5,7 +5,7 @@ echo "[mean_vagrant] STARTING BUILD"
 echo ""
 
 # Set scripts defaults
-export MY_PATH=/vagrant
+export MY_PATH=/vagrant/env
 export DEBIAN_FRONTEND=noninteractive
 export USER_PATH="`( cd ~ && pwd )`"
 
