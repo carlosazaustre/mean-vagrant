@@ -9,10 +9,11 @@ if $NODE_INSTALL; then
     echo "[mean_vagrant] INSTALLING Node.js"
     echo ""
 
-    git clone git://github.com/ry/node.git
-    cd node
-    ./configure
-    make
-    make install
-    cd ~
+    # sudo apt-get update
+    apt-get -q update
+    apt-get install -y python-software-properties python g++ make
+    apt-get -q update
+    add-apt-repository ppa:chris-lea/node.js
+    apt-get -q update
+    apt-get install -y nodejs
 fi
