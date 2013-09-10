@@ -17,6 +17,7 @@ $MY_PATH/build/deps.sh
 $MY_PATH/build/git.sh
 $MY_PATH/build/mongo.sh
 $MY_PATH/build/node.sh
+$MY_PATH/build/unpack.sh
 
 echo ""
 echo "[mean_vagrant] BUILD COMPLETE"
