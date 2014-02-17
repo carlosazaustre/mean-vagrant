@@ -16,4 +16,12 @@ if $NODE_INSTALL; then
     add-apt-repository ppa:chris-lea/node.js
     apt-get -q update
     apt-get install -y nodejs
+
+    npm install -g express
+    npm install -g bower
+    npm install -g stylus
+    npm install -g grunt
+    npm install -g grunt-cli
+    npm install -g forever
+    npm install -g nodemon
 fi
