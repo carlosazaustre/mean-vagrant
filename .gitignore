@@ -1,3 +1,6 @@
 *~
 .DS_Store
 .vagrant
+src
+tmp
+bootstrap.sh
