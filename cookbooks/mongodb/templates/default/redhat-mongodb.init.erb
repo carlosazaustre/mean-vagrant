@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# <%= @provides %> - Startup script for mongod
+
+# chkconfig: 35 85 15
+# description: Mongo is a scalable, document-oriented database.
+# processname: <%= @provides %>
+# config: /etc/mongod.conf
+# pidfile: /var/run/mongo/mongo.pid
+
+. /etc/rc.d/init.d/functions
+
+SYSCONFIG="/etc/sysconfig/<%= @provides %>"
+MONGO_USER=mongod
+
+SUBSYS_LOCK_FILE=/var/lock/subsys/<%= @provides %>
+
+. "$SYSCONFIG" || true
+
+start()
+{
+  echo -n $"Starting <%= @provides %>: "
+<% if @emits_pid %>
+  daemon --user "$MONGO_USER" --pidfile "$DBPATH"/mongod.lock $DAEMON $DAEMON_OPTS
+<% else %>
+  daemon --user "$MONGO_USER" $DAEMON $DAEMON_OPTS
+<% end %>
+  RETVAL=$?
+  echo
+  [ $RETVAL -eq 0 ] && touch $SUBSYS_LOCK_FILE
+}
+
+stop()
+{
+  echo -n $"Stopping <%= @provides %>: "
+<% if @emits_pid %>
+  killproc -p "$DBPATH"/mongod.lock -d 300 $DAEMON
+<% else %>
+  killproc -d 300 $DAEMON
+<% end %>
+  RETVAL=$?
+  echo
+  [ $RETVAL -eq 0 ] && rm -f $SUBSYS_LOCK_FILE
+}
+
+restart () {
+  stop
+  start
+}
+
+<% if %w{ rhel }.include? node.platform_family -%>
+ulimit -f <%= node.mongodb.ulimit.file_size %>
+ulimit -t <%= node.mongodb.ulimit.cpu_time %>
+ulimit -v <%= node.mongodb.ulimit.virtual_memory %>
+ulimit -n <%= node.mongodb.ulimit.open_files %>
+ulimit -m <%= node.mongodb.ulimit.memory_size %>
+ulimit -u <%= node.mongodb.ulimit.processes %>
+<% else -%>
+ulimit -n 12000
+<% end -%>
+
+RETVAL=0
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart|reload|force-reload)
+    restart
+    ;;
+  condrestart)
+    [ -f $SUBSYS_LOCK_FILE ] && restart || :
+    ;;
+  status)
+<% if @emits_pid %>
+    status -p "$DBPATH"/mongod.lock $DAEMON
+<% else %>
+    status $DAEMON
+<% end %>
+    RETVAL=$?
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
+    RETVAL=1
+esac
+
+exit $RETVAL
+

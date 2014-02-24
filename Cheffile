@@ -1,0 +1,11 @@
+# encoding: utf-8
+
+site 'http://community.opscode.com/api/v1'
+
+cookbook "apt"
+cookbook "vim", {}
+cookbook "mongodb", {}
+cookbook "nodejs", {:github=>"mdxp/nodejs-cookbook"}
+cookbook "git", {}
+cookbook "nginx", {}
+cookbook "redis", {:github=>"ctrabold/chef-redis"}

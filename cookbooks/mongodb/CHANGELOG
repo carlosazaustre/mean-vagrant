@@ -1,0 +1,23 @@
+========================
+chef cookbooks Changelog
+========================
+
+Version 0.13.2, UNRELEASED
+---------------------------
+add support for chef_gem on newer versions of chef
+
+Version 0.13.1, UNRELEASED
+---------------------------
+Add keyfileSupport
+
+Version 0.13.0, UNRELEASED
+---------------------------
+Bunch of stuff...
+
+Version 0.1.0
+----------------------------
+Initial release of the cookbooks for the chef configuration management system
+developed at edelight GmbH.
+With this first release we publish the mongodb cookbook we use for our systems.
+This cookbook helps you to configure single node mongodb instances as well as
+more complicated cluster setups (including sharding and replication).
