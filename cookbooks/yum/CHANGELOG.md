@@ -2,6 +2,49 @@ yum Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the yum cookbook.
 
+v3.3.0 (2014-09-04)
+-------------------
+- Fix issue with sslverify if set to false
+- Add fancy badges
+
+v3.3.0 (2014-09-03)
+-------------------
+- Adding tuning attributes for all supported resource parameters
+- Adding options hash parameter
+- Adding (real) rhel-6.5 and centos-7.0 to test-kitchen coverage
+- Updating regex for mirror_expire and mirrorlist_expire to include /^\d+[mhd]$/
+- Updating README so keepcache reflects reality (defaults to false)
+- Changing 'obsoletes' behavior in globalconfig resource to match
+  default behavior. (now defaults to nil, yum defaults to false)
+- Adding makecache action to repository resource
+- Adding mode parameter to repository resource. Defaults to '0644'.
+
+v3.2.4 (2014-08-20)
+-------------------
+#82 - Adding a makecache parameter
+
+v3.2.2 (2014-06-11)
+-------------------
+#77 - Parameter default to be Trueclass instead of "1"
+#78 - add releasever parameter
+
+
+v3.2.0 (2014-04-09)
+-------------------
+- [COOK-4510] - Adding username and password parameters to node attributes
+- [COOK-4518] - Fix Scientific Linux distroverpkg
+
+
+v3.1.6 (2014-03-27)
+-------------------
+- [COOK-4463] - support multiple GPG keys
+- [COOK-4364] - yum_repository delete action fails
+
+
+v3.1.4 (2014-03-12)
+-------------------
+- [COOK-4417] Expand test harness to encompass 32-bit boxes
+
 
 v3.1.2 (2014-02-23)
 -------------------

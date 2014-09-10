@@ -19,21 +19,20 @@
 # limitations under the License.
 #
 
-include_recipe "mongodb"
+node.set['mongodb']['is_configserver'] = true
+node.set['mongodb']['cluster_name'] = node['mongodb']['cluster_name']
+node.set['mongodb']['shard_name'] = node['mongodb']['shard_name']
 
-service "mongodb" do
-  supports :status => true, :restart => true
-  action [:disable, :stop]
-end
+include_recipe 'mongodb::install'
 
-# we are not starting the configserver service with the --configsvr
-# commandline option because right now this only changes the port it's
-# running on, and we are overwriting this port anyway.
-mongodb_instance "configserver" do
-  mongodb_type "configserver"
-  port         node['mongodb']['port']
-  logpath      node['mongodb']['logpath']
-  dbpath       node['mongodb']['dbpath']
-  enable_rest  node['mongodb']['enable_rest']
-  smallfiles   node['mongodb']['smallfiles']
+# mongodb_instance will set configsvr = true in the config file.
+# http://docs.mongodb.org/manual/reference/configuration-options/#sharded-cluster-options
+# we still explicitly set the port and small files.
+mongodb_instance node['mongodb']['instance_name'] do
+  mongodb_type 'configserver'
+  port         node['mongodb']['config']['port']
+  logpath      node['mongodb']['config']['logpath']
+  dbpath       node['mongodb']['config']['dbpath']
+  enable_rest  node['mongodb']['config']['rest']
+  smallfiles   node['mongodb']['config']['smallfiles']
 end

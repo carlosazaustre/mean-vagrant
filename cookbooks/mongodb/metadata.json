@@ -8,18 +8,15 @@
   "platforms": {
     "ubuntu": ">= 0.0.0",
     "debian": ">= 0.0.0",
-    "freebsd": ">= 0.0.0",
     "centos": ">= 0.0.0",
     "redhat": ">= 0.0.0",
-    "fedora": ">= 0.0.0",
-    "amazon": ">= 0.0.0",
-    "scientific": ">= 0.0.0"
+    "amazon": ">= 0.0.0"
   },
   "dependencies": {
     "apt": ">= 1.8.2",
+    "yum": ">= 3.0",
     "python": ">= 0.0.0",
-    "runit": ">= 1.1.6",
-    "yum": ">= 0.0.0"
+    "runit": ">= 1.5.0"
   },
   "recommendations": {
   },
@@ -32,7 +29,7 @@
   "replacing": {
   },
   "attributes": {
-    "mongodb/dbpath": {
+    "mongodb/config/dbpath": {
       "display_name": "dbpath",
       "description": "Path to store the mongodb data",
       "default": "/var/lib/mongodb",
@@ -46,10 +43,10 @@
 
       ]
     },
-    "mongodb/logpath": {
+    "mongodb/config/logpath": {
       "display_name": "logpath",
       "description": "Path to store the logfiles of a mongodb instance",
-      "default": "/var/log/mongodb",
+      "default": "/var/log/mongodb/mongodb.log",
       "choice": [
 
       ],
@@ -60,10 +57,24 @@
 
       ]
     },
-    "mongodb/port": {
+    "mongodb/config/port": {
       "display_name": "Port",
       "description": "Port the mongodb instance is running on",
       "default": "27017",
+      "choice": [
+
+      ],
+      "calculated": false,
+      "type": "string",
+      "required": "optional",
+      "recipes": [
+
+      ]
+    },
+    "mongodb/reload_action": {
+      "display_name": "Reload",
+      "description": "Action to take when MongoDB config files are modified",
+      "default": "restart",
       "choice": [
 
       ],
@@ -93,7 +104,7 @@
     "mongodb/cluster_name": {
       "display_name": "Cluster Name",
       "description": "Name of the mongodb cluster, all nodes of a cluster must have the same name.",
-      "default": null,
+      "default": "",
       "choice": [
 
       ],
@@ -134,10 +145,10 @@
 
       ]
     },
-    "mongodb/replicaset_name": {
-      "display_name": "Replicaset_name",
+    "mongodb/config/replSet": {
+      "display_name": "Replicaset Name",
       "description": "Name of a mongodb replicaset",
-      "default": null,
+      "default": "",
       "choice": [
 
       ],
@@ -148,7 +159,7 @@
 
       ]
     },
-    "mongodb/enable_rest": {
+    "mongodb/config/rest": {
       "display_name": "Enable Rest",
       "description": "Enable the ReST interface of the webserver",
       "choice": [
@@ -161,7 +172,7 @@
 
       ]
     },
-    "mongodb/smallfiles": {
+    "mongodb/config/smallfiles": {
       "display_name": "Use small files",
       "description": "Modify MongoDB to use a smaller default data file size",
       "choice": [
@@ -174,10 +185,10 @@
 
       ]
     },
-    "mongodb/bind_ip": {
+    "mongodb/config/bind_ip": {
       "display_name": "Bind address",
       "description": "MongoDB instance bind address",
-      "default": null,
+      "default": "",
       "choice": [
 
       ],
@@ -191,7 +202,7 @@
     "mongodb/package_version": {
       "display_name": "MongoDB package version",
       "description": "Version of the MongoDB package to install",
-      "default": null,
+      "default": "",
       "choice": [
 
       ],
@@ -205,7 +216,7 @@
     "mongodb/configfile": {
       "display_name": "Configuration File",
       "description": "Name of configuration file to use with when starting mongod/mongos vs command line options",
-      "default": null,
+      "default": "",
       "choice": [
 
       ],
@@ -216,7 +227,7 @@
 
       ]
     },
-    "mongodb/nojournal": {
+    "mongodb/config/nojournal": {
       "display_name": "Disable Journals",
       "description": "Journals are enabled by default on 64bit after mongo 2.0, this can disable it",
       "default": "false",
@@ -245,6 +256,7 @@
     },
     "mongodb/mms_agent/api_key": {
       "display_name": "MMS Agent API Key",
+      "default": "",
       "choice": [
 
       ],
@@ -255,8 +267,23 @@
 
       ]
     },
-    "mongodb/mms_agent/secret_key": {
-      "display_name": "MMS Agent Secret Key",
+    "mongodb/mms_agent/monitoring": {
+      "display_name": "MMS Monitoring Agent",
+      "description": "Hash of MMS Monitoring Agent attributes",
+      "type": "hash",
+      "choice": [
+
+      ],
+      "calculated": false,
+      "required": "optional",
+      "recipes": [
+
+      ]
+    },
+    "mongodb/mms_agent/monitoring/version": {
+      "display_name": "MMS Monitoring Agent version",
+      "description": "Version of MMS Monitoring Agent to install",
+      "default": "2.0.0.17-1",
       "choice": [
 
       ],
@@ -267,10 +294,23 @@
 
       ]
     },
-    "mongodb/oplog_size": {
-      "display_name": "oplogSize",
-      "description": "Specifies a maximum size in megabytes for the replication operation log",
-      "default": null,
+    "mongodb/mms_agent/backup": {
+      "display_name": "MMS Backup Agent",
+      "description": "Hash of MMS Backup Agent attributes",
+      "type": "hash",
+      "choice": [
+
+      ],
+      "calculated": false,
+      "required": "optional",
+      "recipes": [
+
+      ]
+    },
+    "mongodb/mms_agent/backup/version": {
+      "display_name": "MMS Backup Agent version",
+      "description": "Version of MMS Backup Agent to install",
+      "default": "1.4.3.28-1",
       "choice": [
 
       ],
@@ -291,7 +331,8 @@
     "mongodb::configserver": "Installs and configures a configserver for mongodb sharding",
     "mongodb::shard": "Installs and configures a single shard",
     "mongodb::replicaset": "Installs and configures a mongodb replicaset",
-    "mongodb::mms-agent": "Installs and configures a Mongo Management Service agent"
+    "mongodb::mms_monitoring_agent": "Installs and configures a MongoDB MMS Monitoring Agent",
+    "mongodb::mms_backup_agent": "Installs and configures a MongoDB MMS Backup Agent"
   },
-  "version": "0.13.7"
+  "version": "0.16.1"
 }

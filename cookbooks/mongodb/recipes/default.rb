@@ -19,39 +19,30 @@
 # limitations under the License.
 #
 
-package node[:mongodb][:package_name] do
-  action :install
-  version node[:mongodb][:package_version]
-end
+include_recipe 'mongodb::install'
 
-
-# Create keyFile if specified
-if node[:mongodb][:key_file]
-  file "/etc/mongodb.key" do
-    owner node[:mongodb][:user]
-    group node[:mongodb][:group]
-    mode  "0600"
-    backup false
-    content node[:mongodb][:key_file]
+# allow mongodb_instance to run if recipe isn't included
+allow_mongodb_instance_run = true
+conflicting_recipes = %w(mongodb::replicaset mongodb::shard mongodb::configserver mongodb::mongos mongodb::mms_agent)
+chef_major_version = Chef::VERSION.split('.').first.to_i
+if chef_major_version < 11
+  conflicting_recipes.each do |recipe|
+    allow_mongodb_instance_run &&= false if node.recipe?(recipe)
+  end
+else
+  conflicting_recipes.each do |recipe|
+    allow_mongodb_instance_run &&= false if node.run_context.loaded_recipe?(recipe)
   end
 end
 
-
-# configure default instance
-replicaset_recipe = 'mongodb::replicaset'
-configured_as_replicaset = case Chef::Version.new(Chef::VERSION).major
-  when 0..10 then node.recipe?(replicaset_recipe)
-  else node.run_context.loaded_recipe?(replicaset_recipe)
-end
-
-unless configured_as_replicaset
+if allow_mongodb_instance_run
   mongodb_instance node['mongodb']['instance_name'] do
-    mongodb_type "mongod"
-    bind_ip      node['mongodb']['bind_ip']
-    port         node['mongodb']['port']
-    logpath      node['mongodb']['logpath']
-    dbpath       node['mongodb']['dbpath']
-    enable_rest  node['mongodb']['enable_rest']
-    smallfiles   node['mongodb']['smallfiles']
+    mongodb_type 'mongod'
+    bind_ip      node['mongodb']['config']['bind_ip']
+    port         node['mongodb']['config']['port']
+    logpath      node['mongodb']['config']['logpath']
+    dbpath       node['mongodb']['config']['dbpath']
+    enable_rest  node['mongodb']['config']['rest']
+    smallfiles   node['mongodb']['config']['smallfiles']
   end
 end

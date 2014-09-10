@@ -1,6 +1,6 @@
 {
   "name": "nginx",
-  "version": "2.2.2",
+  "version": "2.7.4",
   "description": "Installs and configures nginx",
   "long_description": "",
   "maintainer": "Opscode, Inc.",
@@ -19,11 +19,10 @@
   "dependencies": {
     "apt": "~> 2.2",
     "bluepill": "~> 2.3",
-    "build-essential": "~> 1.4",
-    "ohai": "~> 1.1",
+    "build-essential": "~> 2.0",
+    "ohai": "~> 2.0",
     "runit": "~> 1.2",
-    "yum": "~> 3.0",
-    "yum-epel": ">= 0.0.0"
+    "yum-epel": "~> 0.3"
   },
   "recommendations": {
   },

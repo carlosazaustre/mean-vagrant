@@ -4,7 +4,7 @@ maintainer_email  'cookbooks@opscode.com'
 license           'Apache 2.0'
 description       'Installs and configures rsyslog'
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version           '1.11.0'
+version           '1.12.2'
 
 recipe            'rsyslog', 'Installs rsyslog'
 recipe            'rsyslog::client', 'Sets up a client to log to a remote rsyslog server'
@@ -87,6 +87,14 @@ attribute 'rsyslog/priv_seperation',
   :display_name => 'Privilege separation',
   :description => 'Whether or not to make use of Rsyslog privilege separation',
   :default => 'false'
+
+attribute 'rsyslog/default_file_template',
+  :display_name => 'Default file log format template',
+  :description => 'The name of a pre-defined log format template (ie - `RSYSLOG_FileFormat`), used for local log files.'
+
+attribute 'rsyslog/default_remote_template',
+  :display_name => 'Default remote log format template',
+  :description => 'The name of a pre-defined log format template (ie - `RSYSLOG_SyslogProtocol23Format`), used for remote log forwarding.'
 
 attribute 'rsyslog/enable_tls',
   :display_name => 'Enable TLS',

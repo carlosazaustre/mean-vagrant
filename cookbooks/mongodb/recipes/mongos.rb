@@ -19,31 +19,35 @@
 # limitations under the License.
 #
 
-include_recipe "mongodb"
-include_recipe "mongodb::mongo_gem"
+node.set['mongodb']['is_mongos'] = true
+node.set['mongodb']['shard_name'] = node['mongodb']['shard_name']
+node.override['mongodb']['instance_name'] = 'mongos'
 
-service "mongodb" do
+include_recipe 'mongodb::install'
+include_recipe 'mongodb::mongo_gem'
+
+service 'mongodb' do
   action [:disable, :stop]
 end
 
-configsrv = search(
+configsrvs = search(
   :node,
   "mongodb_cluster_name:#{node['mongodb']['cluster_name']} AND \
-   recipes:mongodb\\:\\:configserver AND \
+   mongodb_is_configserver:true AND \
    chef_environment:#{node.chef_environment}"
 )
 
-if configsrv.length != 1 and configsrv.length != 3
-  Chef::Log.error("Found #{configsrv.length} configserver, need either one or three of them")
-  raise "Wrong number of configserver nodes"
+if configsrvs.length != 1 && configsrvs.length != 3
+  Chef::Log.error("Found #{configsrvs.length} configservers, need either one or three of them")
+  fail 'Wrong number of configserver nodes' unless Chef::Config[:solo]
 end
 
-mongodb_instance "mongos" do
-  mongodb_type "mongos"
-  port         node['mongodb']['port']
-  logpath      node['mongodb']['logpath']
-  dbpath       node['mongodb']['dbpath']
-  configserver configsrv
-  enable_rest  node['mongodb']['enable_rest']
-  smallfiles   node['mongodb']['smallfiles']
+mongodb_instance node['mongodb']['instance_name'] do
+  mongodb_type 'mongos'
+  port         node['mongodb']['config']['port']
+  logpath      node['mongodb']['config']['logpath']
+  dbpath       node['mongodb']['config']['dbpath']
+  configservers configsrvs
+  enable_rest  node['mongodb']['config']['rest']
+  smallfiles   node['mongodb']['config']['smallfiles']
 end
