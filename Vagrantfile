@@ -6,15 +6,17 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "opscode-ubuntu-12.04_chef-11.4.0"
-  config.vm.box_url = "https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_chef-11.4.0.box"
+  config.vm.box = "ubuntu/trusty64"
   config.ssh.forward_agent = true
 
+  # Add port-forward for Express app
   config.vm.network :forwarded_port, guest: 3000, host: 3000
+  # Add port-forward for Livereload
   config.vm.network :forwarded_port, guest: 35729, host: 35729
+  # Add port-forward for Nginx
   config.vm.network :forwarded_port, guest: 80, host: 80
 
-  config.vm.synced_folder "src/", "/home/vagrant/src"
+  config.vm.synced_folder "src/", "/home/ubuntu/src"
 
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = ["cookbooks"]
