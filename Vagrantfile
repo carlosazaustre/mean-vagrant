@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
   # Add port-forward for Nginx
   config.vm.network :forwarded_port, guest: 80, host: 80
 
-  config.vm.synced_folder "src/", "/home/ubuntu/src"
+  config.vm.synced_folder "development/", "/home/vagrant/development"
 
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = ["cookbooks"]
@@ -55,4 +55,8 @@ Vagrant.configure("2") do |config|
       }
     }
   end
+
+  # Install dependencies
+  config.vm.provision :shell, :path => "install.sh"
+
 end
