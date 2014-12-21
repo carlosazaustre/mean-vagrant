@@ -80,7 +80,7 @@ a 'hello.js' file that only puts 'hello world!' on your console.
     - Config Path: `/etc/redis/redis.conf`
     - Bind: `127.0.0.1`
     - Port: `6379`
-  - **Nginx** v1.4.6
+ - **Nginx** v1.4.6
     - Path: `/etc/nginx`
     - Log Path: `/var/log/nginx`
 
